@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS system files
+.DS_Store
+
+# Python environments
+.venv/
+venv/
+env/
+
+# Large training datasets
+ML/Data/
+ML/Validation/
+ML/High_res/
+ML/Low_res/
+
+# Experimental model checkpoints
+ML/weights/
+
+# Temporary files
+*.tmp
+*.log
+
+# Editor settings
+.vscode/
+.idea/
+
+# Preserve Pending folder without uploading its contents
+Pending/*
+!Pending/.gitkeep

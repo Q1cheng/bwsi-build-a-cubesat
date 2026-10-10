@@ -1,0 +1,203 @@
+DATA MANIPULATOR SYSTEM – README
+
+--------------------------------------------------
+
+OVERVIEW
+
+This system processes grayscale terrain images and generates terrain strength overlays and numerical grids using a trained machine learning model and a physics-based equation.
+
+Once started, the system runs automatically and requires no user interaction.
+
+--------------------------------------------------
+
+IMAGE REQUIREMENTS
+
+Images must be grayscale PNG files with the following dimensions:
+
+Width: 720 pixels
+Height: 1072 pixels
+
+Incoming images must be placed in the folder:
+
+Pending
+
+--------------------------------------------------
+
+SYSTEM OPERATION
+
+The system runs using the script:
+
+watchman.py
+
+This script runs indefinitely and checks the Pending folder multiple times per hour. When a new image appears, it is automatically processed.
+
+--------------------------------------------------
+
+PROCESSING PIPELINE
+
+When an image is detected, the following steps occur:
+
+1. The image is loaded as a grayscale image.
+2. Sensor maps are generated from the grayscale image.
+3. A trained neural network predicts three terrain property matrices:
+
+   Friction
+   Cohesion
+   Density
+
+Each matrix has size:
+
+1072 x 720
+
+Each pixel represents the predicted terrain properties at that location.
+
+--------------------------------------------------
+
+STRENGTH EQUATION
+
+Terrain strength is represented using the equation:
+
+q(B) = mB + c
+
+Where:
+
+m = terrain strength slope value
+c = intercept value
+B = footing width chosen later by the user
+
+The neural network predictions are used to compute the two maps:
+
+m map
+c map
+
+These maps are saved so that the final terrain strength can be computed later for any chosen value of B.
+
+--------------------------------------------------
+
+HEATMAP OVERLAY
+
+A heatmap is generated from the m values and overlaid on the original grayscale image.
+
+Color meaning:
+
+Dark blue / purple = weaker terrain
+Deep Red = stronger terrain
+
+Color intensity corresponds to the slope value (m).
+
+
+OUTPUT FILES
+
+After processing an image, the system generates the following outputs.
+
+--------------------------------------------------
+
+MAPS FOLDER
+
+The Maps folder contains the overlay image.
+
+Example:
+
+2026-03-08_14-32-10_overlay.png
+
+--------------------------------------------------
+
+STRENGTH_GRIDS FOLDER
+
+The Strength_grids folder contains the numerical terrain strength grid.
+
+Each grid file contains two matrices stacked together:
+
+grid[0] = m values
+grid[1] = c values
+
+Shape of the grid file:
+
+2 x 1072 x 720
+
+These values allow the user to compute terrain strength later using:
+
+q(B) = mB + c
+
+Example grid file:
+
+2026-03-08_14-32-10_grid.npy
+
+--------------------------------------------------
+
+LOGS FOLDER
+
+The Logs folder contains the raw neural network predictions.
+
+Each log file contains the following stacked matrices:
+
+cohesion
+friction
+density
+
+Shape:
+
+3 x 1072 x 720
+
+Example log file:
+
+2026-03-08_14-32-10_log.npy
+
+--------------------------------------------------
+
+ARCHIVE FOLDER
+
+After processing, the original image is moved from:
+
+Pending
+
+to:
+
+Archive
+
+The archived image is renamed using the same timestamp as the generated outputs.
+
+Example:
+
+2026-03-08_14-32-10_original.png
+
+
+FILE NAMING
+
+All outputs generated from the same image share the same timestamp so they can easily be matched.
+
+Example files generated from one image:
+
+2026-03-08_14-32-10_overlay.png
+2026-03-08_14-32-10_grid.npy
+2026-03-08_14-32-10_log.npy
+2026-03-08_14-32-10_original.png
+
+
+HOW TO USE THE SYSTEM
+
+1. Start the system by running:
+
+   watchman.py
+
+2. Once running, the system operates indefinitely.
+
+3. Place grayscale PNG images into the Pending folder
+
+4. The system will automatically detect the image, process it, and generate outputs.
+
+5. The overlay image will appear in Maps.
+
+6. The terrain strength grid will appear in Strength_grids.
+
+7. The raw prediction matrices will appear in Logs.
+
+8. The processed image will be moved to Archive.
+
+9. All of the npy files produced where a 32 pixel area is averaged into one value because millions of number is really bad.
+No additional steps are required once watchman.py is running.
+
+11. The value of the m maps are in ten thousands and c maps are in thousands.
+   - Reminder that bearing capcity after using Mx + C is in Newtons/m^2
+
+END OF README

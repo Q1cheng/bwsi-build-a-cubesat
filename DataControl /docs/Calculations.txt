@@ -1,0 +1,114 @@
+TERZAGHI BEARING CAPACITY MODEL
+
+Ultimate bearing capacity equation:
+
+qt = cNc + γDfNq + 0.5γBNγ
+
+Where:
+
+qt
+Ultimate bearing capacity. This represents the maximum vertical pressure the soil can support before shear failure occurs.
+
+Units:
+Pa (N/m²)
+
+--------------------------------------------------
+
+OVERBURDEN / EMBEDMENT CONTRIBUTION
+
+γDfNq
+
+This term represents the strength gained from soil that sits above the footing.
+
+γ = unit weight of soil
+γ = ρg
+
+ρ = density of soil (kg/m³)
+g = gravitational acceleration (m/s²)
+
+For the Moon:
+g = 1.62 m/s²
+
+Df = embedment depth of the footing (m)
+
+Nq = confinement factor depending on friction angle φ
+
+Nq = e^(π tan φ) * tan²(45° + φ/2)
+
+Because the lander sits on the surface of the lunar soil, the embedment depth is approximately zero.
+
+Therefore the term:
+
+γDfNq ≈ 0
+
+and can be neglected.
+
+--------------------------------------------------
+
+COHESION CONTRIBUTION
+
+cNc
+
+This represents resistance caused by particle bonding, cementation, electrostatic attraction, and interlocking of soil particles.
+
+c = cohesion (Pa)
+
+Nc = cohesion factor derived from friction angle
+
+Nc = (Nq - 1) / tan φ
+
+--------------------------------------------------
+
+SOIL WEIGHT CONTRIBUTION
+
+0.5γBNγ
+
+This represents resistance caused by the weight of the soil mass and the way the soil pushes back against the footing.
+
+B = footing width (m)
+
+For example this could represent the width of a lander footpad.
+
+Nγ = weight factor derived from friction angle
+
+Nγ = 2 (Nq + 1) tan φ
+
+--------------------------------------------------
+
+ML PREDICTED PARAMETERS
+
+The following soil properties are predicted using a machine learning model that analyzes terrain imagery:
+
+c(x,y)   = cohesion at location (x,y)
+ρ(x,y)   = density at location (x,y)
+φ(x,y)   = friction angle at location (x,y)
+
+These values are predicted per pixel and then inserted into the bearing capacity equation.
+
+--------------------------------------------------
+
+LINEAR FORM OF THE EQUATION
+
+Because the terms cNc and 0.5γNγ are deterministic, the equation can be rewritten as a function of the independent variable B (footing width):
+
+q(B) = MB + C
+
+Where:
+
+C = cNc
+M = 0.5γNγ
+
+This allows the bearing capacity to be expressed as a linear function of footing width.
+
+--------------------------------------------------
+
+HEATMAP INTERPRETATION
+
+The strength map produced by the system visualizes the magnitude of the slope of q(B).
+
+Color meaning:
+
+Light blue = weaker terrain
+Red = stronger terrain
+
+The slope value represents how quickly the bearing capacity increases as the footing width increases.
