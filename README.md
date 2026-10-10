@@ -84,3 +84,13 @@ Python · PyTorch · OpenCV · NumPy · CNNs · Image Processing · Geotechnical
 ## Limitations
 
 The model was trained on synthetic soil-property labels rather than direct lunar measurements. Predictions therefore represent estimated relative terrain characteristics, not experimentally validated lunar bearing-capacity measurements.
+
+## Project Structure
+
+- `ML/` — Custom CNN architecture, synthetic data generation, feature extraction, training, and model weights.
+- `Data_management/` — Automated image tiling, resolution reduction, and grayscale preprocessing.
+- `IMG_converter/` — Image conversion utilities.
+- `Inference.py` — Model inference.
+- `Watchman.py` — Project utility script.
+- `docs/` — Usage instructions and supporting calculations.
+- `results/` — Example predictions, terrain strength maps, and training results.
